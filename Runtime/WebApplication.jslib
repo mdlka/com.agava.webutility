@@ -15,7 +15,7 @@ const library = {
 
         setBeforeUnloadCallback: function (callbackPtr) {
             window.addEventListener('beforeunload', function () {
-                dynCall('bu', callbackPtr);
+                dynCall('v', callbackPtr);
             });
         },
     },
