@@ -12,6 +12,12 @@ const library = {
         getInBackground: function () {
             return document.hidden;
         },
+
+        setBeforeUnloadCallback: function (callbackPtr) {
+            window.addEventListener('beforeunload', function () {
+                dynCall('bu', callbackPtr);
+            });
+        },
     },
 
     // External C# calls.
@@ -22,6 +28,10 @@ const library = {
 
     GetWebApplicationInBackground: function () {
         return webApplication.getInBackground();
+    },
+
+    SetWebApplicationBeforeUnloadCallback: function (callbackPtr) {
+        webApplication.setBeforeUnloadCallback(callbackPtr);
     },
 }
 

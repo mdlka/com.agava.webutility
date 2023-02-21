@@ -15,6 +15,8 @@ namespace Agava.WebUtility
         /// </remarks>
         public static event Action<bool> InBackgroundChangeEvent;
 
+        public static event Action BeforeUnloadEvent;
+
         /// <remarks>
         /// Triggers with a slight delay when going into background.<br/>
         /// Use <see cref="InBackgroundChangeEvent"/> when a faster result is needed.
@@ -27,6 +29,9 @@ namespace Agava.WebUtility
         [DllImport("__Internal")]
         private static extern bool SetWebApplicationInBackgroundChangeCallback(Action<bool> callback);
 
+        [DllImport("__Internal")]
+        private static extern bool SetWebApplicationBeforeUnloadCallback(Action callback);
+
 #if UNITY_WEBGL && !UNITY_EDITOR
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
 #endif
@@ -34,12 +39,19 @@ namespace Agava.WebUtility
         private static void Initialize()
         {
             SetWebApplicationInBackgroundChangeCallback(OnInBackgroundChange);
+            SetWebApplicationBeforeUnloadCallback(OnBeforeUnload);
         }
 
         [MonoPInvokeCallback(typeof(Action<bool>))]
         private static void OnInBackgroundChange(bool hidden)
         {
             InBackgroundChangeEvent?.Invoke(hidden);
+        }
+        
+        [MonoPInvokeCallback(typeof(Action))]
+        private static void OnBeforeUnload()
+        {
+            BeforeUnloadEvent?.Invoke();
         }
     }
 }
